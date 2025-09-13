@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, Box } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { HelmetProvider } from 'react-helmet-async';
 
 // Contexts
 import { AuthProvider } from './contexts/AuthContext';
@@ -234,40 +233,38 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <ErrorBoundary>
-            <AuthProvider>
-              <RecipeProvider>
-                <Router>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-                    <Header />
-                    <Box component="main" sx={{ flexGrow: 1 }}>
-                      <Routes>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/recipes" element={<RecipesPage />} />
-                        <Route path="/recipes/:id" element={<RecipeDetailPage />} />
-                        <Route path="/nutrition" element={<NutritionPage />} />
-                        <Route path="/favorites" element={<div>Favorites Page</div>} />
-                        <Route path="/meal-planner" element={<div>Meal Planner Page</div>} />
-                        <Route path="/profile" element={<div>Profile Page</div>} />
-                        <Route path="/settings" element={<div>Settings Page</div>} />
-                        <Route path="/search" element={<div>Search Page</div>} />
-                        <Route path="*" element={<div>404 - Page not found</div>} />
-                      </Routes>
-                    </Box>
-                    <Footer />
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <ErrorBoundary>
+          <AuthProvider>
+            <RecipeProvider>
+              <Router>
+                <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                  <Header />
+                  <Box component="main" sx={{ flexGrow: 1 }}>
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/login" element={<LoginPage />} />
+                      <Route path="/recipes" element={<RecipesPage />} />
+                      <Route path="/recipes/:id" element={<RecipeDetailPage />} />
+                      <Route path="/nutrition" element={<NutritionPage />} />
+                      <Route path="/favorites" element={<div>Favorites Page</div>} />
+                      <Route path="/meal-planner" element={<div>Meal Planner Page</div>} />
+                      <Route path="/profile" element={<div>Profile Page</div>} />
+                      <Route path="/settings" element={<div>Settings Page</div>} />
+                      <Route path="/search" element={<div>Search Page</div>} />
+                      <Route path="*" element={<div>404 - Page not found</div>} />
+                    </Routes>
                   </Box>
-                </Router>
-              </RecipeProvider>
-            </AuthProvider>
-          </ErrorBoundary>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </HelmetProvider>
+                  <Footer />
+                </Box>
+              </Router>
+            </RecipeProvider>
+          </AuthProvider>
+        </ErrorBoundary>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
