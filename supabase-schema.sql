@@ -170,6 +170,15 @@ CREATE INDEX IF NOT EXISTS idx_favorites_recipe_id ON favorites(recipe_id);
 CREATE INDEX IF NOT EXISTS idx_meal_plans_user_id ON meal_plans(user_id);
 
 -- Données de test (optionnel)
+-- Créer d'abord un profil utilisateur de test
+INSERT INTO profiles (id, email, full_name, avatar_url) VALUES 
+(
+  '00000000-0000-0000-0000-000000000001',
+  'test@runner-recipes.com',
+  'Utilisateur Test',
+  'https://via.placeholder.com/150'
+) ON CONFLICT (id) DO NOTHING;
+
 -- Insérer quelques recettes de test
 INSERT INTO recipes (
   title, 
@@ -234,7 +243,7 @@ INSERT INTO recipes (
     "carbToProteinRatio": 3.25,
     "hydrationScore": 6
   }',
-  (SELECT id FROM profiles LIMIT 1),
+  '00000000-0000-0000-0000-000000000001',
   '["pâtes", "italien", "rapide", "protéines"]'
 ),
 (
@@ -286,7 +295,7 @@ INSERT INTO recipes (
     "carbToProteinRatio": 3.75,
     "hydrationScore": 8
   }',
-  (SELECT id FROM profiles LIMIT 1),
+  '00000000-0000-0000-0000-000000000001',
   '["quinoa", "salade", "légumes", "sain", "récupération"]'
 );
 
