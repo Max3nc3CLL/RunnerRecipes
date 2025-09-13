@@ -78,6 +78,10 @@ class SupabaseAuthService {
         return { user: null, error };
       }
 
+      if (!data.user) {
+        return { user: null, error: null };
+      }
+      
       const authUser = await this.getUserProfile(data.user);
       const user = authUser ? this.mapAuthUserToUser(authUser) : null;
       return { user, error: null };
@@ -209,7 +213,7 @@ class SupabaseAuthService {
         })
         .eq('id', user.id);
 
-      return { error: error as AuthError };
+      return { error: error as unknown as AuthError };
     } catch (error) {
       return { 
         error: error as AuthError 
