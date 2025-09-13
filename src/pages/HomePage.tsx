@@ -364,7 +364,7 @@ const HomePage: React.FC = () => {
 
                     {/* Badge catégorie */}
                     <Chip
-                      label={recipe.category}
+                      label={recipe.category.name}
                       size="small"
                       sx={{
                         position: 'absolute',
