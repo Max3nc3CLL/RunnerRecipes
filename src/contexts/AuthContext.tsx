@@ -1,7 +1,7 @@
-// Contexte d'authentification
+// Contexte d'authentification avec Supabase
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { supabaseAuthService, AuthUser } from '../services/supabaseAuth';
 import { User } from '../types';
-import authService from '../services/auth';
 
 interface AuthContextType {
   user: User | null;
@@ -23,19 +23,41 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = authService.onAuthStateChanged((user) => {
-      setUser(user);
+    // Récupérer l'utilisateur actuel au chargement
+    const getCurrentUser = async () => {
+      try {
+        const currentUser = await supabaseAuthService.getCurrentUser();
+        setUser(currentUser);
+      } catch (error) {
+        console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getCurrentUser();
+
+    // Écouter les changements d'authentification
+    const { data: { subscription } } = supabaseAuthService.onAuthStateChange((authUser) => {
+      setUser(authUser);
       setLoading(false);
     });
 
-    return unsubscribe;
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async () => {
     try {
       setLoading(true);
-      const user = await authService.signInWithGoogle();
-      setUser(user);
+      const { user: authUser, error } = await supabaseAuthService.signInWithGoogle();
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      // L'utilisateur sera mis à jour via onAuthStateChange
     } catch (error) {
       console.error('Erreur de connexion:', error);
       throw error;
@@ -47,7 +69,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signOut = async () => {
     try {
       setLoading(true);
-      await authService.signOut();
+      const { error } = await supabaseAuthService.signOut();
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      
       setUser(null);
     } catch (error) {
       console.error('Erreur de déconnexion:', error);
@@ -61,8 +88,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (!user) return;
 
     try {
-      const updatedUser = await authService.updateUserProfile(user.id, updates);
-      setUser(updatedUser);
+      const { error } = await supabaseAuthService.updateUserProfile(updates);
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      // Mettre à jour l'utilisateur local
+      setUser({ ...user, ...updates });
     } catch (error) {
       console.error('Erreur de mise à jour du profil:', error);
       throw error;

@@ -1,7 +1,7 @@
-// Contexte pour la gestion des recettes
+// Contexte pour la gestion des recettes avec Supabase
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { Recipe, SearchFilters } from '../types';
-import apiService from '../services/api';
+import { supabaseRecipesService } from '../services/supabaseRecipes';
 
 interface RecipeContextType {
   recipes: Recipe[];
@@ -30,99 +30,145 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [searchFilters, setSearchFilters] = useState<SearchFilters>({});
+  const [searchFilters, setSearchFilters] = useState<SearchFilters>({
+    category: '',
+    difficulty: '',
+    maxPrepTime: null,
+    maxCookTime: null,
+    minRating: null,
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecipes, setTotalRecipes] = useState(0);
 
-  const fetchRecipes = useCallback(async (filters?: SearchFilters, page = 1) => {
+  const ITEMS_PER_PAGE = 12;
+
+  // Récupérer toutes les recettes
+  const fetchRecipes = useCallback(async (filters?: SearchFilters, page: number = 1) => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await apiService.getRecipes(filters, page);
-      setRecipes(response.data);
-      setCurrentPage(page);
-      
-      if (response.pagination) {
-        setTotalPages(response.pagination.totalPages);
-        setTotalRecipes(response.pagination.total);
+
+      let allRecipes = await supabaseRecipesService.getAllRecipes();
+
+      // Appliquer les filtres
+      if (filters) {
+        allRecipes = allRecipes.filter(recipe => {
+          if (filters.category && recipe.category !== filters.category) return false;
+          if (filters.difficulty && recipe.difficulty !== filters.difficulty) return false;
+          if (filters.maxPrepTime && recipe.prepTime > filters.maxPrepTime) return false;
+          if (filters.maxCookTime && recipe.cookTime > filters.maxCookTime) return false;
+          if (filters.minRating && recipe.rating < filters.minRating) return false;
+          return true;
+        });
       }
+
+      // Pagination
+      const startIndex = (page - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+      const paginatedRecipes = allRecipes.slice(startIndex, endIndex);
+
+      setRecipes(paginatedRecipes);
+      setTotalRecipes(allRecipes.length);
+      setTotalPages(Math.ceil(allRecipes.length / ITEMS_PER_PAGE));
+      setCurrentPage(page);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur lors du chargement des recettes');
-      setRecipes([]);
+      setError('Erreur lors du chargement des recettes');
+      console.error('Erreur fetchRecipes:', err);
     } finally {
       setLoading(false);
     }
   }, []);
 
+  // Rechercher des recettes
   const searchRecipes = useCallback(async (query: string, filters?: SearchFilters) => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await apiService.searchRecipes(query, filters);
-      setRecipes(response.data);
-      setCurrentPage(1);
-      
-      if (response.pagination) {
-        setTotalPages(response.pagination.totalPages);
-        setTotalRecipes(response.pagination.total);
+
+      let searchResults = await supabaseRecipesService.searchRecipes(query);
+
+      // Appliquer les filtres supplémentaires
+      if (filters) {
+        searchResults = searchResults.filter(recipe => {
+          if (filters.category && recipe.category !== filters.category) return false;
+          if (filters.difficulty && recipe.difficulty !== filters.difficulty) return false;
+          if (filters.maxPrepTime && recipe.prepTime > filters.maxPrepTime) return false;
+          if (filters.maxCookTime && recipe.cookTime > filters.maxCookTime) return false;
+          if (filters.minRating && recipe.rating < filters.minRating) return false;
+          return true;
+        });
       }
+
+      setRecipes(searchResults);
+      setTotalRecipes(searchResults.length);
+      setTotalPages(1);
+      setCurrentPage(1);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur lors de la recherche');
-      setRecipes([]);
+      setError('Erreur lors de la recherche');
+      console.error('Erreur searchRecipes:', err);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const getRecipe = useCallback(async (id: string) => {
+  // Récupérer une recette par ID
+  const getRecipe = useCallback(async (id: string): Promise<Recipe | null> => {
     try {
-      const recipe = await apiService.getRecipe(id);
+      setLoading(true);
+      setError(null);
+
+      const recipe = await supabaseRecipesService.getRecipeById(id);
       return recipe;
     } catch (err) {
-      console.error('Erreur lors de la récupération de la recette:', err);
+      setError('Erreur lors du chargement de la recette');
+      console.error('Erreur getRecipe:', err);
       return null;
+    } finally {
+      setLoading(false);
     }
   }, []);
 
+  // Basculer le favori (pour l'instant, juste une simulation)
   const toggleFavorite = useCallback(async (recipeId: string) => {
     try {
-      const isFavorite = await apiService.toggleFavorite(recipeId);
-      
-      // Mettre à jour l'état local
-      setRecipes(prevRecipes =>
-        prevRecipes.map(recipe =>
-          recipe.id === recipeId
-            ? { ...recipe, isFavorite }
-            : recipe
-        )
-      );
+      // TODO: Implémenter la logique de favoris avec Supabase
+      console.log('Toggle favorite pour la recette:', recipeId);
     } catch (err) {
-      console.error('Erreur lors de la gestion des favoris:', err);
+      console.error('Erreur toggleFavorite:', err);
     }
   }, []);
 
-  const updateFilters = useCallback((newFilters: Partial<SearchFilters>) => {
-    const updatedFilters = { ...searchFilters, ...newFilters };
-    setSearchFilters(updatedFilters);
-    fetchRecipes(updatedFilters, 1);
-  }, [searchFilters, fetchRecipes]);
+  // Mettre à jour les filtres
+  const updateFilters = useCallback((filters: Partial<SearchFilters>) => {
+    setSearchFilters(prev => ({ ...prev, ...filters }));
+  }, []);
 
+  // Effacer les filtres
   const clearFilters = useCallback(() => {
-    setSearchFilters({});
-    fetchRecipes({}, 1);
-  }, [fetchRecipes]);
+    setSearchFilters({
+      category: '',
+      difficulty: '',
+      maxPrepTime: null,
+      maxCookTime: null,
+      minRating: null,
+    });
+  }, []);
 
+  // Actualiser les recettes
   const refreshRecipes = useCallback(async () => {
     await fetchRecipes(searchFilters, currentPage);
-  }, [searchFilters, currentPage, fetchRecipes]);
+  }, [fetchRecipes, searchFilters, currentPage]);
 
   // Charger les recettes au montage du composant
   useEffect(() => {
     fetchRecipes();
   }, [fetchRecipes]);
+
+  // Recharger les recettes quand les filtres changent
+  useEffect(() => {
+    fetchRecipes(searchFilters, 1);
+  }, [searchFilters, fetchRecipes]);
 
   const value: RecipeContextType = {
     recipes,
