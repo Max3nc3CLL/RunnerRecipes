@@ -466,7 +466,7 @@ const HomePage: React.FC = () => {
         <Container maxWidth="lg">
           <Grid container spacing={4}>
             {stats.map((stat, index) => (
-              <Grid item xs={6} md={3} key={index}>
+              <Grid size={{ xs: 6, md: 3 }} key={index}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Box
                     sx={{
