@@ -130,7 +130,7 @@ class SupabaseRecipesService {
           ingredients: recipe.ingredients,
           instructions: recipe.instructions,
           nutrition: recipe.nutrition,
-          author_id: recipe.authorId
+          author_id: recipe.author.id
         })
         .select(`
           *,
@@ -234,12 +234,52 @@ class SupabaseRecipesService {
       ingredients: data.ingredients || [],
       instructions: data.instructions || [],
       nutrition: data.nutrition || {},
-      authorId: data.author_id,
       author: data.profiles ? {
         id: data.profiles.id,
+        email: data.profiles.email,
         name: data.profiles.full_name || 'Utilisateur anonyme',
-        avatar: data.profiles.avatar_url
-      } : undefined,
+        photoURL: data.profiles.avatar_url,
+        sportProfile: {
+          activityType: 'running',
+          averageDistance: 10,
+          frequency: 'regular',
+          goals: 'endurance',
+          weight: 70,
+          height: 175
+        },
+        preferences: {
+          dietaryRestrictions: [],
+          favoriteIngredients: [],
+          dislikedIngredients: [],
+          cookingSkill: 3,
+          preferredMealTimes: ['breakfast', 'lunch', 'dinner'],
+          servingSize: 'medium'
+        },
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at)
+      } : {
+        id: data.author_id,
+        email: 'unknown@example.com',
+        name: 'Utilisateur anonyme',
+        sportProfile: {
+          activityType: 'running',
+          averageDistance: 10,
+          frequency: 'regular',
+          goals: 'endurance',
+          weight: 70,
+          height: 175
+        },
+        preferences: {
+          dietaryRestrictions: [],
+          favoriteIngredients: [],
+          dislikedIngredients: [],
+          cookingSkill: 3,
+          preferredMealTimes: ['breakfast', 'lunch', 'dinner'],
+          servingSize: 'medium'
+        },
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at)
+      },
       createdAt: data.created_at,
       updatedAt: data.updated_at
     };

@@ -1,5 +1,6 @@
 import { supabase } from '../config/supabase';
-import { User, Session, AuthError } from '@supabase/supabase-js';
+import { User as SupabaseUser, Session, AuthError } from '@supabase/supabase-js';
+import { User } from '../types';
 
 export interface AuthUser {
   id: string;
@@ -49,7 +50,8 @@ class SupabaseAuthService {
         return { user: null, error };
       }
 
-      const user = await this.getUserProfile(data.user);
+      const authUser = await this.getUserProfile(data.user);
+      const user = authUser ? this.mapAuthUserToUser(authUser) : null;
       return { user, error: null };
     } catch (error) {
       return { 
@@ -76,7 +78,8 @@ class SupabaseAuthService {
         return { user: null, error };
       }
 
-      const user = await this.getUserProfile(data.user);
+      const authUser = await this.getUserProfile(data.user);
+      const user = authUser ? this.mapAuthUserToUser(authUser) : null;
       return { user, error: null };
     } catch (error) {
       return { 
@@ -99,12 +102,15 @@ class SupabaseAuthService {
   }
 
   // Obtenir l'utilisateur actuel
-  async getCurrentUser(): Promise<AuthUser | null> {
+  async getCurrentUser(): Promise<User | null> {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return null;
       
-      return await this.getUserProfile(user);
+      const authUser = await this.getUserProfile(user);
+      if (!authUser) return null;
+      
+      return this.mapAuthUserToUser(authUser);
     } catch (error) {
       console.error('Erreur lors de la récupération de l\'utilisateur:', error);
       return null;
@@ -123,11 +129,16 @@ class SupabaseAuthService {
   }
 
   // Écouter les changements d'authentification
-  onAuthStateChange(callback: (user: AuthUser | null) => void) {
+  onAuthStateChange(callback: (user: User | null) => void) {
     return supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
-        const user = await this.getUserProfile(session.user);
-        callback(user);
+        const authUser = await this.getUserProfile(session.user);
+        if (authUser) {
+          const user = this.mapAuthUserToUser(authUser);
+          callback(user);
+        } else {
+          callback(null);
+        }
       } else {
         callback(null);
       }
@@ -135,7 +146,7 @@ class SupabaseAuthService {
   }
 
   // Obtenir le profil utilisateur depuis la table profiles
-  private async getUserProfile(user: User): Promise<AuthUser | null> {
+  private async getUserProfile(user: SupabaseUser): Promise<AuthUser | null> {
     try {
       const { data: profile, error } = await supabase
         .from('profiles')
@@ -198,12 +209,40 @@ class SupabaseAuthService {
         })
         .eq('id', user.id);
 
-      return { error };
+      return { error: error as AuthError };
     } catch (error) {
       return { 
         error: error as AuthError 
       };
     }
+  }
+
+  // Mapper AuthUser vers User
+  private mapAuthUserToUser(authUser: AuthUser): User {
+    return {
+      id: authUser.id,
+      email: authUser.email,
+      name: authUser.full_name || 'Utilisateur',
+      photoURL: authUser.avatar_url,
+      sportProfile: {
+        activityType: 'running',
+        averageDistance: 10,
+        frequency: 'regular',
+        goals: 'endurance',
+        weight: 70,
+        height: 175
+      },
+      preferences: {
+        dietaryRestrictions: [],
+        favoriteIngredients: [],
+        dislikedIngredients: [],
+        cookingSkill: 3,
+        preferredMealTimes: ['breakfast', 'lunch', 'dinner'],
+        servingSize: 'medium'
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
   }
 }
 

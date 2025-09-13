@@ -31,11 +31,11 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({
-    category: '',
-    difficulty: '',
-    maxPrepTime: null,
-    maxCookTime: null,
-    minRating: null,
+    categories: [],
+    difficulty: [],
+    prepTime: undefined,
+    cookTime: undefined,
+    rating: undefined,
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -54,11 +54,11 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
       // Appliquer les filtres
       if (filters) {
         allRecipes = allRecipes.filter(recipe => {
-          if (filters.category && recipe.category !== filters.category) return false;
-          if (filters.difficulty && recipe.difficulty !== filters.difficulty) return false;
-          if (filters.maxPrepTime && recipe.prepTime > filters.maxPrepTime) return false;
-          if (filters.maxCookTime && recipe.cookTime > filters.maxCookTime) return false;
-          if (filters.minRating && recipe.rating < filters.minRating) return false;
+          if (filters.categories && filters.categories.length > 0 && !filters.categories.includes(recipe.category)) return false;
+          if (filters.difficulty && filters.difficulty.length > 0 && !filters.difficulty.includes(recipe.difficulty)) return false;
+          if (filters.prepTime && recipe.prepTime > filters.prepTime) return false;
+          if (filters.cookTime && recipe.cookTime > filters.cookTime) return false;
+          if (filters.rating && recipe.rating < filters.rating) return false;
           return true;
         });
       }
@@ -91,11 +91,11 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
       // Appliquer les filtres supplémentaires
       if (filters) {
         searchResults = searchResults.filter(recipe => {
-          if (filters.category && recipe.category !== filters.category) return false;
-          if (filters.difficulty && recipe.difficulty !== filters.difficulty) return false;
-          if (filters.maxPrepTime && recipe.prepTime > filters.maxPrepTime) return false;
-          if (filters.maxCookTime && recipe.cookTime > filters.maxCookTime) return false;
-          if (filters.minRating && recipe.rating < filters.minRating) return false;
+          if (filters.categories && filters.categories.length > 0 && !filters.categories.includes(recipe.category)) return false;
+          if (filters.difficulty && filters.difficulty.length > 0 && !filters.difficulty.includes(recipe.difficulty)) return false;
+          if (filters.prepTime && recipe.prepTime > filters.prepTime) return false;
+          if (filters.cookTime && recipe.cookTime > filters.cookTime) return false;
+          if (filters.rating && recipe.rating < filters.rating) return false;
           return true;
         });
       }
@@ -147,11 +147,11 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
   // Effacer les filtres
   const clearFilters = useCallback(() => {
     setSearchFilters({
-      category: '',
-      difficulty: '',
-      maxPrepTime: null,
-      maxCookTime: null,
-      minRating: null,
+      categories: [],
+      difficulty: [],
+      prepTime: undefined,
+      cookTime: undefined,
+      rating: undefined,
     });
   }, []);
 
