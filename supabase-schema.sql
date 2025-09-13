@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS recipes (
   ingredients JSONB NOT NULL DEFAULT '[]',
   instructions JSONB NOT NULL DEFAULT '[]',
   nutrition JSONB NOT NULL DEFAULT '{}',
-  tags JSONB DEFAULT '[]',
+  tags JSONB DEFAULT '[]'
   rating DECIMAL(3,2) DEFAULT 0.0,
   review_count INTEGER DEFAULT 0,
   author_id UUID REFERENCES profiles(id) ON DELETE CASCADE,

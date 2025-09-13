@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "runner-recipes",
   "builds": [
     {
       "src": "package.json",

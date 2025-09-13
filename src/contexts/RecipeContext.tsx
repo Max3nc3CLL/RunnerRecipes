@@ -54,7 +54,7 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
       // Appliquer les filtres
       if (filters) {
         allRecipes = allRecipes.filter(recipe => {
-          if (filters.categories && filters.categories.length > 0 && !filters.categories.includes(recipe.category)) return false;
+          if (filters.categories && filters.categories.length > 0 && !filters.categories.includes(recipe.category.id)) return false;
           if (filters.difficulty && filters.difficulty.length > 0 && !filters.difficulty.includes(recipe.difficulty)) return false;
           if (filters.prepTime && recipe.prepTime > filters.prepTime) return false;
           if (filters.cookTime && recipe.cookTime > filters.cookTime) return false;
