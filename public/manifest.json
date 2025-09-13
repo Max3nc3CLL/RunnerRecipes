@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Runner Recipes",
+  "name": "Runner Recipes - Recettes Végétariennes pour Coureurs",
+  "description": "Découvrez des recettes végétariennes adaptées aux besoins nutritionnels des coureurs et traileurs. Optimisez votre nutrition pour de meilleures performances.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +21,63 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#2E7D32",
+  "background_color": "#FAFAFA",
+  "orientation": "portrait-primary",
+  "categories": ["food", "health", "lifestyle", "sports"],
+  "lang": "fr",
+  "dir": "ltr",
+  "scope": "/",
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Recettes",
+      "short_name": "Recettes",
+      "description": "Parcourir toutes les recettes",
+      "url": "/recipes",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Calculateur Nutrition",
+      "short_name": "Nutrition",
+      "description": "Calculer vos besoins nutritionnels",
+      "url": "/nutrition",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Favoris",
+      "short_name": "Favoris",
+      "description": "Voir vos recettes favorites",
+      "url": "/favorites",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
 }

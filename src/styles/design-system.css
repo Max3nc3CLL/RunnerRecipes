@@ -1,0 +1,583 @@
+/* ============================================
+   RUNNER RECIPES - DESIGN SYSTEM MODERNE
+   ============================================ */
+
+/* Variables CSS pour le système de design */
+:root {
+  /* ============================================
+     PALETTE DE COULEURS
+     ============================================ */
+  
+  /* Couleurs primaires (oranges énergétiques) */
+  --color-primary-500: #F98807;
+  --color-primary-400: #FFB231;
+  --color-primary-300: #FFC44A;
+  --color-primary-600: #E67E00;
+  --color-primary-700: #B74206;
+  
+  /* Couleurs neutres (grises sophistiquées) */
+  --color-neutral-950: #262730;
+  --color-neutral-900: #363844;
+  --color-neutral-800: #3D404F;
+  --color-neutral-700: #474A5D;
+  --color-neutral-600: #565B73;
+  --color-neutral-500: #6C738B;
+  --color-neutral-400: #8A8FA6;
+  --color-neutral-300: #B3B7C6;
+  --color-neutral-200: #D7D9E0;
+  --color-neutral-100: #EDEDF1;
+  --color-neutral-50: #F6F7F9;
+  --color-white: #FFFFFF;
+  
+  /* Couleur accent (vert nature) */
+  --color-success: #4ADE80;
+  --color-success-dark: #22C55E;
+  
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+  
+  /* Hiérarchie typographique */
+  --font-size-h1: 48px;
+  --font-size-h2: 36px;
+  --font-size-h3: 24px;
+  --font-size-h4: 20px;
+  --font-size-body: 16px;
+  --font-size-small: 14px;
+  --font-size-caption: 12px;
+  
+  /* Poids de police */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  /* Line heights */
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.2;
+  --line-height-normal: 1.3;
+  --line-height-relaxed: 1.4;
+  --line-height-loose: 1.6;
+  
+  /* ============================================
+     ESPACEMENT
+     ============================================ */
+  
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+  
+  /* ============================================
+     BORDER RADIUS
+     ============================================ */
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 50px;
+  
+  /* ============================================
+     OMBRES
+     ============================================ */
+  
+  --shadow-sm: 0 1px 3px rgba(38, 39, 48, 0.12), 0 1px 2px rgba(38, 39, 48, 0.24);
+  --shadow-md: 0 4px 6px rgba(38, 39, 48, 0.07), 0 2px 4px rgba(38, 39, 48, 0.06);
+  --shadow-lg: 0 10px 15px rgba(38, 39, 48, 0.1), 0 4px 6px rgba(38, 39, 48, 0.05);
+  --shadow-xl: 0 20px 25px rgba(38, 39, 48, 0.1), 0 10px 10px rgba(38, 39, 48, 0.04);
+  --shadow-2xl: 0 25px 50px rgba(38, 39, 48, 0.15);
+  
+  /* Ombres spéciales */
+  --shadow-primary: 0 4px 20px rgba(249, 136, 7, 0.3);
+  --shadow-primary-hover: 0 8px 30px rgba(249, 136, 7, 0.4);
+  --shadow-success: 0 4px 20px rgba(74, 222, 128, 0.3);
+  
+  /* ============================================
+     GRADIENTS
+     ============================================ */
+  
+  --gradient-primary: linear-gradient(135deg, #F98807 0%, #FFB231 100%);
+  --gradient-success: linear-gradient(135deg, #4ADE80 0%, #22C55E 100%);
+  --gradient-neutral: linear-gradient(135deg, #F6F7F9 0%, #EDEDF1 100%);
+  --gradient-overlay: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.1) 100%);
+  
+  /* ============================================
+     TRANSITIONS
+     ============================================ */
+  
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
+  --transition-slow: 0.3s ease;
+  --transition-bounce: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* ============================================
+     BREAKPOINTS
+     ============================================ */
+  
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* ============================================
+   RESET ET STYLES DE BASE
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-loose);
+  color: var(--color-neutral-950);
+  background-color: var(--color-neutral-50);
+}
+
+/* ============================================
+   TYPOGRAPHY MODERNE
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-neutral-950);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-extrabold);
+  line-height: var(--line-height-tight);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-snug);
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+}
+
+h4 {
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-relaxed);
+}
+
+p {
+  margin: 0 0 var(--spacing-4) 0;
+  color: var(--color-neutral-700);
+}
+
+small {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-neutral-600);
+}
+
+/* ============================================
+   COMPOSANTS DE BASE
+   ============================================ */
+
+/* Boutons modernes */
+.btn-primary {
+  background: var(--gradient-primary);
+  border: none;
+  padding: 14px 28px;
+  border-radius: var(--radius-lg);
+  color: var(--color-white);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-body);
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-primary-hover);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: rgba(38, 39, 48, 0.06);
+  border: 1px solid rgba(38, 39, 48, 0.12);
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  color: var(--color-neutral-700);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background: rgba(38, 39, 48, 0.08);
+  border-color: rgba(38, 39, 48, 0.18);
+  color: var(--color-neutral-950);
+}
+
+/* Badges nutritionnels */
+.nutrition-badge {
+  background: var(--gradient-primary);
+  color: var(--color-white);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-small);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 12px rgba(249, 136, 7, 0.25);
+}
+
+/* Labels de recette */
+.recipe-label {
+  background: rgba(38, 39, 48, 0.06);
+  color: var(--color-neutral-700);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(249, 136, 7, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(249, 136, 7, 0.6), 0 0 30px rgba(249, 136, 7, 0.4);
+  }
+}
+
+/* Classes d'animation */
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.4s ease forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.4s ease forwards;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.6s ease forwards;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Animations au scroll */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Effets hover avancés */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(38, 39, 48, 0.15);
+}
+
+.hover-scale {
+  transition: all 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(249, 136, 7, 0.4);
+}
+
+/* Animations de chargement */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* Animations de micro-interactions */
+.micro-bounce {
+  transition: transform 0.1s ease;
+}
+
+.micro-bounce:active {
+  transform: scale(0.95);
+}
+
+.micro-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.micro-ripple::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.micro-ripple:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* ============================================
+   UTILITAIRES
+   ============================================ */
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.font-bold { font-weight: var(--font-weight-bold); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-medium { font-weight: var(--font-weight-medium); }
+
+.text-primary { color: var(--color-primary-500); }
+.text-neutral-700 { color: var(--color-neutral-700); }
+.text-neutral-600 { color: var(--color-neutral-600); }
+.text-white { color: var(--color-white); }
+
+.bg-primary { background: var(--gradient-primary); }
+.bg-success { background: var(--gradient-success); }
+.bg-white { background: var(--color-white); }
+
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+
+.transition-all { transition: all var(--transition-normal); }
+.transition-fast { transition: all var(--transition-fast); }
+.transition-slow { transition: all var(--transition-slow); }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 640px) {
+  :root {
+    --font-size-h1: 36px;
+    --font-size-h2: 28px;
+    --font-size-h3: 20px;
+    --font-size-h4: 18px;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 12px 20px;
+    font-size: var(--font-size-small);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --font-size-h1: 32px;
+    --font-size-h2: 24px;
+    --font-size-h3: 18px;
+  }
+}

@@ -1,46 +1,214 @@
-# Getting Started with Create React App
+# 🏃‍♂️ Runner Recipes
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Un site web moderne et responsive spécialisé dans les recettes végétariennes adaptées aux besoins nutritionnels des coureurs et traileurs.
 
-## Available Scripts
+## 🎯 Objectif
 
-In the project directory, you can run:
+Créer une plateforme complète qui combine les fonctionnalités classiques d'un site de recettes avec des spécificités liées à la performance sportive, optimisée pour les coureurs végétariens.
 
-### `npm start`
+## ✨ Fonctionnalités Principales
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 🔐 Authentification
+- Connexion via Google OAuth
+- Profil utilisateur personnalisable avec informations sportives
+- Préférences alimentaires et objectifs nutritionnels
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 🍽️ Gestion des Recettes
+- **Catégories spécialisées** : Pré-course, Post-course, Récupération, Snacks trail, etc.
+- **Informations nutritionnelles détaillées** : Calories, macronutriments, électrolytes, vitamines
+- **Instructions complètes** avec photos et conseils techniques
+- **Système de notation** et commentaires
 
-### `npm test`
+### 👤 Fonctionnalités Utilisateur
+- **Favoris** avec collections personnalisées
+- **Planificateur de repas** hebdomadaire
+- **Liste de courses** générée automatiquement
+- **Historique** des recettes préparées
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🧮 Outils Avancés
+- **Calculateur nutritionnel** personnalisé
+- **Recommandations** basées sur le type d'entraînement
+- **Mode hors-ligne** pour les sorties
+- **Timer intégré** pour la cuisson
+- **Conversion automatique** des unités
 
-### `npm run build`
+## 🛠️ Technologies Utilisées
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Frontend
+- **React 19** avec TypeScript
+- **Material-UI (MUI)** pour l'interface utilisateur
+- **React Router** pour la navigation
+- **React Query** pour la gestion des données
+- **Framer Motion** pour les animations
+- **React Hook Form** pour les formulaires
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Backend (Prévu)
+- **Node.js** avec Express
+- **PostgreSQL** pour la base de données
+- **Firebase** pour l'authentification
+- **Cloudinary** pour l'hébergement d'images
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Déploiement
+- **Vercel** ou **Netlify** pour le frontend
+- **Heroku** ou **AWS** pour le backend
 
-### `npm run eject`
+## 🚀 Installation et Démarrage
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Prérequis
+- Node.js (version 18 ou supérieure)
+- npm ou yarn
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Installation
+```bash
+# Cloner le repository
+git clone https://github.com/votre-username/runner-recipes.git
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+# Aller dans le dossier
+cd runner-recipes
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+# Installer les dépendances
+npm install
 
-## Learn More
+# Démarrer le serveur de développement
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+L'application sera accessible sur `http://localhost:3000`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Variables d'Environnement
+Créez un fichier `.env.local` à la racine du projet :
+
+```env
+REACT_APP_FIREBASE_API_KEY=your_firebase_api_key
+REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=your_project_id
+REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+REACT_APP_FIREBASE_APP_ID=your_app_id
+REACT_APP_API_URL=http://localhost:3001/api
+```
+
+## 📱 Fonctionnalités Détaillées
+
+### 🏠 Page d'Accueil
+- Hero section avec présentation du concept
+- Statistiques de la communauté
+- Catégories populaires
+- Recettes mises en avant
+- Call-to-action pour l'inscription
+
+### 🔍 Page des Recettes
+- **Filtres avancés** : Catégorie, difficulté, temps, calories, note
+- **Recherche intelligente** par ingrédients, tags, description
+- **Affichage en grille** responsive
+- **Pagination** pour de grandes listes
+- **Tri** par popularité, note, date
+
+### 📋 Fiche Recette
+- **Informations complètes** : Ingrédients, instructions, nutrition
+- **Photos étape par étape**
+- **Timer intégré** pour la cuisson
+- **Système de favoris**
+- **Avis et commentaires**
+- **Recettes similaires**
+
+### 👤 Profil Utilisateur
+- **Informations sportives** : Type d'activité, distance, fréquence
+- **Préférences alimentaires** : Restrictions, ingrédients favoris
+- **Objectifs nutritionnels** personnalisés
+- **Statistiques** : Recettes préparées, favoris, etc.
+
+### 📅 Planificateur de Repas
+- **Planification hebdomadaire** avec calendrier
+- **Recommandations** basées sur l'entraînement
+- **Génération automatique** de liste de courses
+- **Export** vers calendrier externe
+
+## 🎨 Design et UX
+
+### Palette de Couleurs
+- **Primaire** : Vert (#2E7D32) - Nature, énergie
+- **Secondaire** : Orange (#FF6B35) - Vitalité, performance
+- **Accent** : Turquoise (#4ECDC4) - Fraîcheur, hydratation
+
+### Responsive Design
+- **Mobile-first** approach
+- **Breakpoints** : xs, sm, md, lg, xl
+- **Navigation adaptative** avec menu hamburger
+
+### Accessibilité
+- **WCAG 2.1** compliance
+- **Contraste** optimisé
+- **Navigation clavier**
+- **Screen readers** support
+
+## 📊 Données Nutritionnelles
+
+### Macronutriments
+- **Glucides** : Complexes pour l'endurance
+- **Protéines** : Végétales pour la récupération
+- **Lipides** : Essentiels et oméga-3
+
+### Micronutriments
+- **Électrolytes** : Sodium, potassium, magnésium
+- **Vitamines** : B, C, D, E pour les coureurs
+- **Minéraux** : Fer, calcium, zinc
+
+### Indices Spécialisés
+- **Index glycémique** pour l'énergie
+- **Ratio glucides/protéines** pour la récupération
+- **Score d'hydratation** pour l'effort
+
+## 🔧 Scripts Disponibles
+
+```bash
+# Développement
+npm start
+
+# Build de production
+npm run build
+
+# Tests
+npm test
+
+# Linting
+npm run lint
+
+# Formatage du code
+npm run format
+```
+
+## 📈 Métriques de Succès
+
+- **Engagement** : Temps passé sur les recettes
+- **Conversion** : Taux de création de compte
+- **Rétention** : Utilisation du planificateur
+- **Social** : Partages sur réseaux sociaux
+
+## 🤝 Contribution
+
+1. Fork le projet
+2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
+3. Commit les changements (`git commit -m 'Add some AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
+
+## 📄 Licence
+
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+## 👥 Équipe
+
+- **Développement Frontend** : React, TypeScript, Material-UI
+- **Design UX/UI** : Interface moderne et intuitive
+- **Nutrition** : Expertise en nutrition sportive végétarienne
+
+## 📞 Contact
+
+- **Email** : contact@runner-recipes.com
+- **Site Web** : https://runner-recipes.com
+- **Twitter** : @RunnerRecipes
+
+---
+
+**Fait avec ❤️ pour la communauté des coureurs végétariens**
