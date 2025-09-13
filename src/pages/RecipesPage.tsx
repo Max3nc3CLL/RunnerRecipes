@@ -14,8 +14,8 @@ import {
   Chip,
   Button,
   Slider,
-  useTheme,
-  useMediaQuery,
+  // useTheme, // Plus nécessaire
+  // useMediaQuery, // Plus nécessaire
   Pagination,
   CircularProgress,
 } from '@mui/material';
@@ -33,8 +33,8 @@ import { RECIPE_CATEGORIES, DIFFICULTY_LEVELS } from '../constants';
 import { SearchFilters } from '../types';
 
 const RecipesPage: React.FC = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  // const theme = useTheme(); // Plus nécessaire
+  // const isMobile = useMediaQuery(theme.breakpoints.down('md')); // Plus nécessaire
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   // const { } = useAuth(); // TODO: Utiliser l'authentification
@@ -60,7 +60,7 @@ const RecipesPage: React.FC = () => {
     rating: undefined,
   });
 
-  const [showFilters, setShowFilters] = useState(!isMobile);
+  // const [showFilters, setShowFilters] = useState(!isMobile); // Plus nécessaire car filtres toujours visibles
 
   // Initialiser les filtres depuis l'URL (une seule fois)
   useEffect(() => {
@@ -324,26 +324,10 @@ const RecipesPage: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Bouton filtres mobile */}
-      {isMobile && (
-        <Button
-          variant="outlined"
-          startIcon={<FilterList />}
-          onClick={() => setShowFilters(!showFilters)}
-          sx={{ mb: 2 }}
-        >
-          Filtres
-        </Button>
-      )}
+      {/* Filtres au-dessus de la liste */}
+      {renderFilters()}
 
-      <Grid container spacing={3}>
-        {/* Filtres */}
-        <Grid size={{ xs: 12, md: 3 }}>
-          {showFilters && renderFilters()}
-        </Grid>
-
-        {/* Liste des recettes */}
-        <Grid size={{ xs: 12, md: 9 }}>
+      {/* Liste des recettes */}
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
               <CircularProgress size={60} />
@@ -410,8 +394,6 @@ const RecipesPage: React.FC = () => {
               )}
             </>
           )}
-        </Grid>
-      </Grid>
     </Container>
   );
 };
