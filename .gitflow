@@ -1,0 +1,148 @@
+# 🌿 Git Flow pour Runner Recipes
+
+## 📋 Structure des Branches
+
+### Branches Principales
+- **`main`** - Branche de production (stable, déployée)
+- **`develop`** - Branche de développement (intégration des features)
+
+### Branches de Fonctionnalités
+- **`feature/nom-fonctionnalite`** - Nouvelles fonctionnalités
+- **`feature/auth-google`** - Authentification Google
+- **`feature/design-system`** - Système de design
+- **`feature/recipe-management`** - Gestion des recettes
+- **`feature/nutrition-calculator`** - Calculateur nutritionnel
+
+### Branches de Corrections
+- **`hotfix/nom-correction`** - Corrections urgentes en production
+- **`bugfix/nom-bug`** - Corrections de bugs
+
+### Branches de Release
+- **`release/v1.0.0`** - Préparation des releases
+- **`release/v1.1.0`** - Nouvelles versions
+
+## 🚀 Workflow de Développement
+
+### 1. Créer une Feature
+```bash
+git checkout develop
+git pull origin develop
+git checkout -b feature/nom-fonctionnalite
+# Développement...
+git add .
+git commit -m "feat: description de la fonctionnalité"
+git push origin feature/nom-fonctionnalite
+```
+
+### 2. Créer une Hotfix
+```bash
+git checkout main
+git pull origin main
+git checkout -b hotfix/nom-correction
+# Correction...
+git add .
+git commit -m "hotfix: description de la correction"
+git push origin hotfix/nom-correction
+```
+
+### 3. Créer une Release
+```bash
+git checkout develop
+git pull origin develop
+git checkout -b release/v1.0.0
+# Préparation release...
+git add .
+git commit -m "chore: préparation release v1.0.0"
+git push origin release/v1.0.0
+```
+
+## 📝 Convention de Commits
+
+### Format
+```
+type(scope): description
+
+[corps du message]
+
+[footer]
+```
+
+### Types
+- **feat** - Nouvelle fonctionnalité
+- **fix** - Correction de bug
+- **docs** - Documentation
+- **style** - Formatage, point-virgules, etc.
+- **refactor** - Refactoring
+- **test** - Tests
+- **chore** - Tâches de maintenance
+
+### Exemples
+```
+feat(auth): ajout connexion Google
+fix(ui): correction responsive mobile
+docs(readme): mise à jour installation
+style(components): formatage code
+refactor(api): optimisation requêtes
+test(components): ajout tests unitaires
+chore(deps): mise à jour dépendances
+```
+
+## 🔄 Processus de Merge
+
+### Feature → Develop
+1. Créer Pull Request
+2. Code Review
+3. Tests passent
+4. Merge et suppression de la branche
+
+### Develop → Main
+1. Créer Release
+2. Tests complets
+3. Merge vers main
+4. Tag de version
+5. Déploiement
+
+### Hotfix → Main
+1. Correction directe
+2. Tests rapides
+3. Merge vers main
+4. Merge vers develop
+5. Déploiement urgent
+
+## 🏷️ Gestion des Tags
+
+### Format des Versions
+- **v1.0.0** - Version majeure
+- **v1.1.0** - Version mineure
+- **v1.1.1** - Version patch
+
+### Créer un Tag
+```bash
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+```
+
+## 🛡️ Protection des Branches
+
+### Main
+- Require pull request reviews
+- Require status checks
+- Require branches to be up to date
+- Restrict pushes
+
+### Develop
+- Require pull request reviews
+- Require status checks
+- Allow force pushes (développeurs)
+
+## 📊 Monitoring
+
+### Branches Actives
+- Surveiller les branches non mergées
+- Nettoyer les branches obsolètes
+- Vérifier les conflits
+
+### Métriques
+- Temps de review
+- Taux de bugs en production
+- Fréquence des releases

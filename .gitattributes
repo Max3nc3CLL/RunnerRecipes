@@ -1,0 +1,56 @@
+# Configuration Git pour Runner Recipes
+
+# Fichiers texte avec fin de ligne LF
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Fichiers binaires
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+
+# Fichiers de configuration
+.env* text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# Fichiers de documentation
+*.md text eol=lf
+LICENSE text eol=lf
+README.md text eol=lf
+
+# Fichiers de build (à ignorer)
+build/ export-ignore
+dist/ export-ignore
+coverage/ export-ignore
+.nyc_output/ export-ignore
+
+# Fichiers de développement
+.vscode/ export-ignore
+.idea/ export-ignore
+*.swp export-ignore
+*.swo export-ignore
+*~ export-ignore
+
+# Fichiers de logs
+*.log export-ignore
+logs/ export-ignore
+
+# Fichiers temporaires
+tmp/ export-ignore
+temp/ export-ignore
