@@ -1,5 +1,5 @@
-// Page d'accueil avec hero section et recettes populaires
-import React, { useEffect } from 'react';
+// Page d'accueil moderne inspirée du design Untitled UI
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Container,
@@ -8,36 +8,58 @@ import {
   Grid,
   Card,
   CardContent,
+  CardMedia,
+  Chip,
+  Avatar,
+  IconButton,
   useTheme,
   useMediaQuery,
 } from '@mui/material';
 import {
-  FitnessCenter,
-  Restaurant,
-  Favorite,
+  ArrowForward,
   Timer,
   People,
+  Favorite,
+  TrendingUp,
+  Restaurant,
+  FitnessCenter,
+  Star,
+  BookmarkBorder,
+  Share,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useRecipes } from '../contexts/RecipeContext';
 import { useAuth } from '../contexts/AuthContext';
-import RecipeCard from '../components/RecipeCard';
-import { RECIPE_CATEGORIES } from '../constants';
+import { Recipe } from '../types';
 
 const HomePage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { recipes, loading, fetchRecipes } = useRecipes();
+  const [featuredRecipe, setFeaturedRecipe] = useState<Recipe | null>(null);
 
   useEffect(() => {
-    // Charger les recettes populaires
-    fetchRecipes({ rating: 4 }, 1);
+    fetchRecipes();
   }, [fetchRecipes]);
 
-  const featuredCategories = RECIPE_CATEGORIES.slice(0, 4);
-  const popularRecipes = recipes.slice(0, 6);
+  useEffect(() => {
+    if (recipes.length > 0) {
+      setFeaturedRecipe(recipes[0]);
+    }
+  }, [recipes]);
+
+  const recentRecipes = recipes.slice(0, 9);
+
+  const categories = [
+    { name: 'Italien', count: 24, color: '#F98807' },
+    { name: 'Salade', count: 18, color: '#4ADE80' },
+    { name: 'Asiatique', count: 15, color: '#F59E0B' },
+    { name: 'Méditerranéen', count: 12, color: '#EF4444' },
+    { name: 'Végétarien', count: 32, color: '#8B5CF6' },
+    { name: 'Protéines', count: 20, color: '#06B6D4' },
+  ];
 
   const stats = [
     { label: 'Recettes', value: '150+', icon: <Restaurant /> },
@@ -47,241 +69,237 @@ const HomePage: React.FC = () => {
   ];
 
   return (
-    <Box>
-      {/* Hero Section */}
+    <Box sx={{ bgcolor: '#FAFAFA', minHeight: '100vh' }}>
+      {/* Header moderne */}
       <Box
         sx={{
-          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-          color: 'white',
-          py: { xs: 8, md: 12 },
-          position: 'relative',
-          overflow: 'hidden',
+          bgcolor: 'white',
+          borderBottom: '1px solid rgba(38, 39, 48, 0.08)',
+          py: 2,
         }}
       >
         <Container maxWidth="lg">
-          <Grid container spacing={4} alignItems="center">
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Typography
-                variant={isMobile ? 'h3' : 'h2'}
-                component="h1"
-                sx={{
-                  fontWeight: 'bold',
-                  mb: 3,
-                  lineHeight: 1.2,
-                }}
-              >
-                Recettes Végétariennes
-                <br />
-                <Box component="span" sx={{ color: theme.palette.warning.light }}>
-                  pour Coureurs
-                </Box>
-              </Typography>
-              
-              <Typography
-                variant="h6"
-                sx={{
-                  mb: 4,
-                  opacity: 0.9,
-                  lineHeight: 1.6,
-                }}
-              >
-                Découvrez des recettes nutritionnellement optimisées pour vos entraînements.
-                De l'énergie pré-course à la récupération post-effort.
-              </Typography>
-
-              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                <Button
-                  variant="contained"
-                  size="large"
-                  sx={{
-                    bgcolor: 'white',
-                    color: theme.palette.primary.main,
-                    fontWeight: 'bold',
-                    px: 4,
-                    py: 1.5,
-                    '&:hover': {
-                      bgcolor: 'rgba(255, 255, 255, 0.9)',
-                    },
-                  }}
-                  onClick={() => navigate('/recipes')}
-                >
-                  Explorer les recettes
-                </Button>
-                
-                {!isAuthenticated && (
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    sx={{
-                      borderColor: 'white',
-                      color: 'white',
-                      fontWeight: 'bold',
-                      px: 4,
-                      py: 1.5,
-                      '&:hover': {
-                        borderColor: 'white',
-                        bgcolor: 'rgba(255, 255, 255, 0.1)',
-                      },
-                    }}
-                    onClick={() => navigate('/signup')}
-                  >
-                    Commencer gratuitement
-                  </Button>
-                )}
-              </Box>
-            </Grid>
-
-            <Grid size={{ xs: 12, md: 6 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Box
                 sx={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #F98807 0%, #F59E0B 100%)',
                   display: 'flex',
-                  justifyContent: 'center',
                   alignItems: 'center',
-                  height: { xs: 300, md: 400 },
+                  justifyContent: 'center',
                 }}
               >
-                <FitnessCenter
-                  sx={{
-                    fontSize: { xs: 200, md: 300 },
-                    opacity: 0.3,
-                  }}
-                />
+                <Restaurant sx={{ color: 'white', fontSize: 20 }} />
               </Box>
-            </Grid>
-          </Grid>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: '#262730' }}>
+                Runner Recipes
+              </Typography>
+            </Box>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+              <Typography variant="body2" sx={{ color: '#6C738B', cursor: 'pointer' }}>
+                Accueil
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#6C738B', cursor: 'pointer' }}>
+                Recettes
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#6C738B', cursor: 'pointer' }}>
+                Nutrition
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#6C738B', cursor: 'pointer' }}>
+                À propos
+              </Typography>
+              
+              {isAuthenticated ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Avatar
+                    src={user?.photoURL}
+                    sx={{ width: 32, height: 32 }}
+                  />
+                  <Typography variant="body2" sx={{ color: '#262730', fontWeight: 500 }}>
+                    {user?.name}
+                  </Typography>
+                </Box>
+              ) : (
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Button
+                    variant="text"
+                    sx={{ color: '#6C738B', textTransform: 'none', fontWeight: 500 }}
+                    onClick={() => navigate('/login')}
+                  >
+                    Se connecter
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      bgcolor: '#262730',
+                      color: 'white',
+                      textTransform: 'none',
+                      fontWeight: 500,
+                      px: 3,
+                      '&:hover': { bgcolor: '#1F2937' },
+                    }}
+                    onClick={() => navigate('/login')}
+                  >
+                    S'inscrire
+                  </Button>
+                </Box>
+              )}
+            </Box>
+          </Box>
         </Container>
       </Box>
 
-      {/* Statistiques */}
-      <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Grid container spacing={4}>
-          {stats.map((stat, index) => (
-            <Grid size={{ xs: 6, md: 3 }} key={index}>
-              <Card
-                sx={{
-                  textAlign: 'center',
-                  p: 3,
-                  height: '100%',
-                  transition: 'transform 0.2s ease-in-out',
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
-                  },
-                }}
-              >
-                <CardContent>
-                  <Box
-                    sx={{
-                      color: theme.palette.primary.main,
-                      mb: 2,
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {stat.icon}
-                  </Box>
-                  <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    {stat.value}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {stat.label}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-
-      {/* Catégories populaires */}
-      <Box sx={{ bgcolor: 'grey.50', py: 8 }}>
-        <Container maxWidth="lg">
-          <Typography
-            variant="h4"
-            component="h2"
+      {/* Hero Section avec recette mise en avant */}
+      {featuredRecipe && (
+        <Box
+          sx={{
+            position: 'relative',
+            height: { xs: '60vh', md: '70vh' },
+            overflow: 'hidden',
+            mb: 8,
+          }}
+        >
+          <CardMedia
+            component="img"
+            image={featuredRecipe.imageUrl || '/api/placeholder/800/600'}
+            alt={featuredRecipe.title}
             sx={{
-              textAlign: 'center',
-              fontWeight: 'bold',
-              mb: 6,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+          
+          {/* Overlay avec informations de la recette */}
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
+              p: 4,
             }}
           >
-            Catégories Populaires
-          </Typography>
-
-          <Grid container spacing={3}>
-            {featuredCategories.map((category) => (
-              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={category.id}>
-                <Card
+            <Container maxWidth="lg">
+              <Box sx={{ maxWidth: '600px' }}>
+                <Chip
+                  label="Recette du jour"
                   sx={{
-                    height: '100%',
-                    cursor: 'pointer',
-                    transition: 'transform 0.2s ease-in-out',
-                    '&:hover': {
-                      transform: 'translateY(-4px)',
-                    },
+                    bgcolor: 'rgba(249, 136, 7, 0.9)',
+                    color: 'white',
+                    fontWeight: 500,
+                    mb: 2,
                   }}
-                  onClick={() => navigate(`/recipes?category=${category.id}`)}
+                />
+                
+                <Typography
+                  variant={isMobile ? 'h4' : 'h3'}
+                  sx={{
+                    color: 'white',
+                    fontWeight: 700,
+                    mb: 2,
+                    lineHeight: 1.2,
+                  }}
                 >
-                  <CardContent sx={{ textAlign: 'center', p: 4 }}>
-                    <Typography
-                      variant="h2"
-                      sx={{
-                        mb: 2,
-                        fontSize: '3rem',
-                      }}
-                    >
-                      {category.icon}
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      component="h3"
-                      sx={{
-                        fontWeight: 'bold',
-                        mb: 1,
-                        color: category.color,
-                      }}
-                    >
-                      {category.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {category.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
+                  {featuredRecipe.title}
+                </Typography>
+                
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    mb: 3,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {featuredRecipe.description}
+                </Typography>
 
-      {/* Recettes populaires */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-          <Typography
-            variant="h4"
-            component="h2"
-            sx={{ fontWeight: 'bold' }}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Timer sx={{ color: 'white', fontSize: 20 }} />
+                    <Typography variant="body2" sx={{ color: 'white' }}>
+                      {featuredRecipe.prepTime + featuredRecipe.cookTime} min
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <People sx={{ color: 'white', fontSize: 20 }} />
+                    <Typography variant="body2" sx={{ color: 'white' }}>
+                      {featuredRecipe.servings} portions
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Star sx={{ color: '#FBBF24', fontSize: 20 }} />
+                    <Typography variant="body2" sx={{ color: 'white' }}>
+                      {featuredRecipe.rating.toFixed(1)}
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Button
+                  variant="contained"
+                  endIcon={<ArrowForward />}
+                  sx={{
+                    bgcolor: 'white',
+                    color: '#262730',
+                    fontWeight: 600,
+                    px: 4,
+                    py: 1.5,
+                    '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
+                  }}
+                  onClick={() => navigate(`/recipes/${featuredRecipe.id}`)}
+                >
+                  Voir la recette
+                </Button>
+              </Box>
+            </Container>
+          </Box>
+
+          {/* Flèche de navigation */}
+          <IconButton
+            sx={{
+              position: 'absolute',
+              right: 24,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              bgcolor: 'rgba(255, 255, 255, 0.9)',
+              color: '#262730',
+              '&:hover': { bgcolor: 'white' },
+            }}
           >
-            Recettes Populaires
-          </Typography>
-          <Button
-            variant="outlined"
-            onClick={() => navigate('/recipes')}
-            sx={{ fontWeight: 'bold' }}
-          >
-            Voir toutes les recettes
-          </Button>
+            <ArrowForward />
+          </IconButton>
         </Box>
+      )}
+
+      {/* Section Recettes récentes */}
+      <Container maxWidth="lg" sx={{ mb: 8 }}>
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 700,
+            color: '#262730',
+            mb: 4,
+          }}
+        >
+          Recettes récentes
+        </Typography>
 
         {loading ? (
           <Grid container spacing={3}>
-            {[...Array(6)].map((_, index) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
-                <Card sx={{ height: 400 }}>
-                  <Box sx={{ height: 200, bgcolor: 'grey.200' }} />
-                  <CardContent>
-                    <Box sx={{ height: 20, bgcolor: 'grey.200', mb: 2 }} />
-                    <Box sx={{ height: 16, bgcolor: 'grey.200', mb: 1 }} />
-                    <Box sx={{ height: 16, bgcolor: 'grey.200', width: '60%' }} />
+            {[...Array(9)].map((_, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Card sx={{ borderRadius: '16px', overflow: 'hidden' }}>
+                  <Box sx={{ height: 200, bgcolor: '#F3F4F6' }} />
+                  <CardContent sx={{ p: 3 }}>
+                    <Box sx={{ height: 24, bgcolor: '#F3F4F6', borderRadius: '4px', mb: 2 }} />
+                    <Box sx={{ height: 16, bgcolor: '#F3F4F6', borderRadius: '4px', mb: 1 }} />
+                    <Box sx={{ height: 16, bgcolor: '#F3F4F6', borderRadius: '4px', width: '60%' }} />
                   </CardContent>
                 </Card>
               </Grid>
@@ -289,69 +307,299 @@ const HomePage: React.FC = () => {
           </Grid>
         ) : (
           <Grid container spacing={3}>
-            {popularRecipes.map((recipe) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={recipe.id}>
-                <RecipeCard
-                  recipe={recipe}
-                  onCardClick={(id) => navigate(`/recipes/${id}`)}
-                  onToggleFavorite={(id) => {
-                    // TODO: Implémenter la logique de favoris
-                    console.log('Toggle favorite:', id);
+            {recentRecipes.map((recipe) => (
+              <Grid item xs={12} sm={6} md={4} key={recipe.id}>
+                <Card
+                  sx={{
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 20px 40px rgba(38, 39, 48, 0.12)',
+                    },
                   }}
-                />
+                  onClick={() => navigate(`/recipes/${recipe.id}`)}
+                >
+                  <Box sx={{ position: 'relative' }}>
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={recipe.imageUrl || '/api/placeholder/400/300'}
+                      alt={recipe.title}
+                    />
+                    
+                    {/* Actions rapides */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 12,
+                        right: 12,
+                        display: 'flex',
+                        gap: 1,
+                      }}
+                    >
+                      <IconButton
+                        size="small"
+                        sx={{
+                          bgcolor: 'rgba(255, 255, 255, 0.9)',
+                          color: '#6C738B',
+                          '&:hover': { bgcolor: 'white' },
+                        }}
+                      >
+                        <BookmarkBorder />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        sx={{
+                          bgcolor: 'rgba(255, 255, 255, 0.9)',
+                          color: '#6C738B',
+                          '&:hover': { bgcolor: 'white' },
+                        }}
+                      >
+                        <Share />
+                      </IconButton>
+                    </Box>
+
+                    {/* Badge catégorie */}
+                    <Chip
+                      label={recipe.category}
+                      size="small"
+                      sx={{
+                        position: 'absolute',
+                        bottom: 12,
+                        left: 12,
+                        bgcolor: 'rgba(249, 136, 7, 0.9)',
+                        color: 'white',
+                        fontWeight: 500,
+                      }}
+                    />
+                  </Box>
+
+                  <CardContent sx={{ p: 3 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                        color: '#262730',
+                        mb: 1,
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {recipe.title}
+                    </Typography>
+                    
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: '#6C738B',
+                        mb: 2,
+                        lineHeight: 1.5,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {recipe.description}
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <Timer sx={{ fontSize: 16, color: '#6C738B' }} />
+                          <Typography variant="caption" sx={{ color: '#6C738B' }}>
+                            {recipe.prepTime + recipe.cookTime}min
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <Star sx={{ fontSize: 16, color: '#FBBF24' }} />
+                          <Typography variant="caption" sx={{ color: '#6C738B' }}>
+                            {recipe.rating.toFixed(1)}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Avatar
+                          src={recipe.author?.photoURL}
+                          sx={{ width: 24, height: 24 }}
+                        />
+                        <Typography variant="caption" sx={{ color: '#6C738B' }}>
+                          {recipe.author?.name}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
               </Grid>
             ))}
           </Grid>
         )}
+
+        {/* Bouton Charger plus */}
+        <Box sx={{ textAlign: 'center', mt: 6 }}>
+          <Button
+            variant="outlined"
+            sx={{
+              borderColor: '#E5E7EB',
+              color: '#6C738B',
+              fontWeight: 500,
+              px: 4,
+              py: 1.5,
+              borderRadius: '12px',
+              '&:hover': {
+                borderColor: '#D1D5DB',
+                bgcolor: 'rgba(107, 114, 128, 0.05)',
+              },
+            }}
+            onClick={() => navigate('/recipes')}
+          >
+            Charger plus...
+          </Button>
+        </Box>
       </Container>
 
-      {/* CTA Section */}
+      {/* Section Statistiques */}
+      <Box sx={{ bgcolor: 'white', py: 8 }}>
+        <Container maxWidth="lg">
+          <Grid container spacing={4}>
+            {stats.map((stat, index) => (
+              <Grid item xs={6} md={3} key={index}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Box
+                    sx={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: '16px',
+                      bgcolor: 'rgba(249, 136, 7, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '0 auto 16px',
+                    }}
+                  >
+                    {React.cloneElement(stat.icon, {
+                      sx: { fontSize: 32, color: '#F98807' },
+                    })}
+                  </Box>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      fontWeight: 700,
+                      color: '#262730',
+                      mb: 1,
+                    }}
+                  >
+                    {stat.value}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: '#6C738B',
+                      fontWeight: 500,
+                    }}
+                  >
+                    {stat.label}
+                  </Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Footer moderne */}
       <Box
         sx={{
-          bgcolor: theme.palette.primary.main,
+          bgcolor: '#262730',
           color: 'white',
           py: 8,
         }}
       >
-        <Container maxWidth="md">
-          <Box sx={{ textAlign: 'center' }}>
+        <Container maxWidth="lg">
+          <Box sx={{ textAlign: 'center', mb: 8 }}>
             <Typography
               variant="h4"
-              component="h2"
               sx={{
-                fontWeight: 'bold',
+                fontWeight: 700,
                 mb: 3,
               }}
             >
-              Prêt à optimiser votre nutrition ?
+              Commençons quelque chose de grand
             </Typography>
             <Typography
-              variant="h6"
+              variant="body1"
               sx={{
+                color: 'rgba(255, 255, 255, 0.8)',
                 mb: 4,
-                opacity: 0.9,
               }}
             >
-              Rejoignez notre communauté de coureurs végétariens et découvrez
-              des recettes adaptées à vos objectifs sportifs.
+              Rejoignez plus de 2 500+ coureurs qui optimisent déjà leur nutrition avec Runner Recipes.
             </Typography>
-            <Button
-              variant="contained"
-              size="large"
-              sx={{
-                bgcolor: 'white',
-                color: theme.palette.primary.main,
-                fontWeight: 'bold',
-                px: 6,
-                py: 2,
-                '&:hover': {
-                  bgcolor: 'rgba(255, 255, 255, 0.9)',
-                },
-              }}
-              onClick={() => navigate(isAuthenticated ? '/meal-planner' : '/signup')}
-            >
-              {isAuthenticated ? 'Créer mon plan de repas' : 'Commencer maintenant'}
-            </Button>
+            
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Button
+                variant="outlined"
+                sx={{
+                  borderColor: 'rgba(255, 255, 255, 0.3)',
+                  color: 'white',
+                  fontWeight: 500,
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: '12px',
+                  '&:hover': {
+                    borderColor: 'rgba(255, 255, 255, 0.5)',
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                }}
+                onClick={() => navigate('/contact')}
+              >
+                Nous contacter
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  bgcolor: 'white',
+                  color: '#262730',
+                  fontWeight: 600,
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: '12px',
+                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
+                }}
+                onClick={() => navigate(isAuthenticated ? '/meal-planner' : '/login')}
+              >
+                Commencer
+              </Button>
+            </Box>
+          </Box>
+
+          {/* Liens du footer */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 4, borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box
+                sx={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #F98807 0%, #F59E0B 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Restaurant sx={{ color: 'white', fontSize: 20 }} />
+              </Box>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                Runner Recipes
+              </Typography>
+            </Box>
+            
+            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+              © 2025 Runner Recipes. Tous droits réservés.
+            </Typography>
           </Box>
         </Container>
       </Box>
