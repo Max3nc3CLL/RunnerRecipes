@@ -293,7 +293,7 @@ const HomePage: React.FC = () => {
         {loading ? (
           <Grid container spacing={3}>
             {[...Array(9)].map((_, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
                 <Card sx={{ borderRadius: '16px', overflow: 'hidden' }}>
                   <Box sx={{ height: 200, bgcolor: '#F3F4F6' }} />
                   <CardContent sx={{ p: 3 }}>
@@ -308,7 +308,7 @@ const HomePage: React.FC = () => {
         ) : (
           <Grid container spacing={3}>
             {recentRecipes.map((recipe) => (
-              <Grid item xs={12} sm={6} md={4} key={recipe.id}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={recipe.id}>
                 <Card
                   sx={{
                     borderRadius: '16px',
