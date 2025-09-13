@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS recipes (
   tags JSONB DEFAULT '[]',
   rating DECIMAL(3,2) DEFAULT 0.0,
   review_count INTEGER DEFAULT 0,
-  author_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  author_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -170,14 +170,9 @@ CREATE INDEX IF NOT EXISTS idx_favorites_recipe_id ON favorites(recipe_id);
 CREATE INDEX IF NOT EXISTS idx_meal_plans_user_id ON meal_plans(user_id);
 
 -- Données de test (optionnel)
--- Créer d'abord un profil utilisateur de test
-INSERT INTO profiles (id, email, full_name, avatar_url) VALUES 
-(
-  '00000000-0000-0000-0000-000000000001',
-  'test@runner-recipes.com',
-  'Utilisateur Test',
-  'https://via.placeholder.com/150'
-) ON CONFLICT (id) DO NOTHING;
+-- Note: Les profils seront créés automatiquement lors de la première connexion
+-- Pour les recettes de test, nous allons les créer sans author_id pour l'instant
+-- et les mettre à jour une fois qu'un utilisateur se connectera
 
 -- Insérer quelques recettes de test
 INSERT INTO recipes (
@@ -243,7 +238,7 @@ INSERT INTO recipes (
     "carbToProteinRatio": 3.25,
     "hydrationScore": 6
   }',
-  '00000000-0000-0000-0000-000000000001',
+  NULL,
   '["pâtes", "italien", "rapide", "protéines"]'
 ),
 (
@@ -295,9 +290,24 @@ INSERT INTO recipes (
     "carbToProteinRatio": 3.75,
     "hydrationScore": 8
   }',
-  '00000000-0000-0000-0000-000000000001',
+  NULL,
   '["quinoa", "salade", "légumes", "sain", "récupération"]'
 );
+
+-- Fonction pour attribuer les recettes sans auteur au premier utilisateur connecté
+CREATE OR REPLACE FUNCTION assign_orphan_recipes_to_user(user_id UUID)
+RETURNS INTEGER AS $$
+DECLARE
+  updated_count INTEGER;
+BEGIN
+  UPDATE recipes 
+  SET author_id = user_id 
+  WHERE author_id IS NULL;
+  
+  GET DIAGNOSTICS updated_count = ROW_COUNT;
+  RETURN updated_count;
+END;
+$$ LANGUAGE plpgsql;
 
 -- Commentaires sur les tables
 COMMENT ON TABLE profiles IS 'Profils utilisateurs liés à auth.users';
