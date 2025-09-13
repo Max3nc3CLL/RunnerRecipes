@@ -20,9 +20,7 @@ import {
   Timer,
   People,
   Favorite,
-  TrendingUp,
   Restaurant,
-  FitnessCenter,
   Star,
   BookmarkBorder,
   Share,
@@ -52,14 +50,14 @@ const HomePage: React.FC = () => {
 
   const recentRecipes = recipes.slice(0, 9);
 
-  const categories = [
-    { name: 'Italien', count: 24, color: '#F98807' },
-    { name: 'Salade', count: 18, color: '#4ADE80' },
-    { name: 'Asiatique', count: 15, color: '#F59E0B' },
-    { name: 'Méditerranéen', count: 12, color: '#EF4444' },
-    { name: 'Végétarien', count: 32, color: '#8B5CF6' },
-    { name: 'Protéines', count: 20, color: '#06B6D4' },
-  ];
+  // const categories = [
+  //   { name: 'Italien', count: 24, color: '#F98807' },
+  //   { name: 'Salade', count: 18, color: '#4ADE80' },
+  //   { name: 'Asiatique', count: 15, color: '#F59E0B' },
+  //   { name: 'Méditerranéen', count: 12, color: '#EF4444' },
+  //   { name: 'Végétarien', count: 32, color: '#8B5CF6' },
+  //   { name: 'Protéines', count: 20, color: '#06B6D4' },
+  // ];
 
   const stats = [
     { label: 'Recettes', value: '150+', icon: <Restaurant /> },

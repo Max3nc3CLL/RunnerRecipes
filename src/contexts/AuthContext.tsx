@@ -1,6 +1,6 @@
 // Contexte d'authentification avec Supabase
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { supabaseAuthService, AuthUser } from '../services/supabaseAuth';
+import { supabaseAuthService } from '../services/supabaseAuth';
 import { User } from '../types';
 
 interface AuthContextType {
@@ -51,7 +51,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signIn = async () => {
     try {
       setLoading(true);
-      const { user: authUser, error } = await supabaseAuthService.signInWithGoogle();
+      const { error } = await supabaseAuthService.signInWithGoogle();
       
       if (error) {
         throw new Error(error.message);
