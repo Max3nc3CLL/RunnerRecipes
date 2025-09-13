@@ -3,6 +3,7 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { Recipe, SearchFilters, ApiResponse, User, MealPlan, Review } from '../types';
 import { API_ENDPOINTS } from '../constants';
 import authService from './auth';
+import { supabaseRecipesService } from './supabaseRecipes';
 
 class ApiService {
   private api: AxiosInstance;
@@ -44,11 +45,11 @@ class ApiService {
   // Obtenir la liste des recettes
   async getRecipes(filters?: SearchFilters, page = 1, limit = 12): Promise<ApiResponse<Recipe[]>> {
     try {
-      // Pour la démonstration, utilisons les données mock
-      const mockRecipes = (await import('../data/mockRecipes')).default;
+      // Utiliser Supabase pour récupérer les recettes
+      const recipes = await supabaseRecipesService.getAllRecipes();
       
       // Appliquer les filtres
-      let filteredRecipes = [...mockRecipes];
+      let filteredRecipes = [...recipes];
       
       if (filters?.categories && filters.categories.length > 0) {
         filteredRecipes = filteredRecipes.filter(recipe => 
@@ -105,9 +106,8 @@ class ApiService {
   // Obtenir une recette par ID
   async getRecipe(id: string): Promise<Recipe> {
     try {
-      // Utiliser les données mock pour le développement
-      const mockRecipes = (await import('../data/mockRecipes')).default;
-      const recipe = mockRecipes.find(r => r.id === id);
+      // Utiliser Supabase pour récupérer la recette
+      const recipe = await supabaseRecipesService.getRecipeById(id);
       
       if (!recipe) {
         throw new Error('Recette non trouvée');
@@ -161,12 +161,12 @@ class ApiService {
   // Rechercher des recettes
   async searchRecipes(query: string, filters?: SearchFilters): Promise<ApiResponse<Recipe[]>> {
     try {
-      // Pour la démonstration, utilisons les données mock
-      const mockRecipes = (await import('../data/mockRecipes')).default;
+      // Utiliser Supabase pour rechercher les recettes
+      const recipes = await supabaseRecipesService.searchRecipes(query);
       
       // Recherche textuelle
       const searchQuery = query.toLowerCase();
-      let filteredRecipes = mockRecipes.filter(recipe => 
+      let filteredRecipes = recipes.filter(recipe => 
         recipe.title.toLowerCase().includes(searchQuery) ||
         recipe.description.toLowerCase().includes(searchQuery) ||
         recipe.shortDescription.toLowerCase().includes(searchQuery) ||

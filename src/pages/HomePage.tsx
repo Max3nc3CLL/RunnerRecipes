@@ -27,14 +27,14 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useRecipes } from '../contexts/RecipeContext';
-import { useAuth } from '../contexts/AuthContext';
+// import { useAuth } from '../contexts/AuthContext'; // Supprimé car plus utilisé
 import { Recipe } from '../types';
 
 const HomePage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  // const { isAuthenticated, user } = useAuth(); // Supprimé car plus utilisé après suppression du header
   const { recipes, loading, fetchRecipes } = useRecipes();
   const [featuredRecipe, setFeaturedRecipe] = useState<Recipe | null>(null);
 
@@ -68,88 +68,6 @@ const HomePage: React.FC = () => {
 
   return (
     <Box sx={{ bgcolor: '#FAFAFA', minHeight: '100vh' }}>
-      {/* Header moderne */}
-      <Box
-        sx={{
-          bgcolor: 'white',
-          borderBottom: '1px solid rgba(38, 39, 48, 0.08)',
-          py: 2,
-        }}
-      >
-        <Container maxWidth="lg">
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box
-                sx={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: '8px',
-                  background: 'linear-gradient(135deg, #F98807 0%, #F59E0B 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Restaurant sx={{ color: 'white', fontSize: 20 }} />
-              </Box>
-              <Typography variant="h6" sx={{ fontWeight: 700, color: '#262730' }}>
-                Runner Recipes
-              </Typography>
-            </Box>
-
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-              <Typography variant="body2" sx={{ color: '#6C738B', cursor: 'pointer' }}>
-                Accueil
-              </Typography>
-              <Typography variant="body2" sx={{ color: '#6C738B', cursor: 'pointer' }}>
-                Recettes
-              </Typography>
-              <Typography variant="body2" sx={{ color: '#6C738B', cursor: 'pointer' }}>
-                Nutrition
-              </Typography>
-              <Typography variant="body2" sx={{ color: '#6C738B', cursor: 'pointer' }}>
-                À propos
-              </Typography>
-              
-              {isAuthenticated ? (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Avatar
-                    src={user?.photoURL}
-                    sx={{ width: 32, height: 32 }}
-                  />
-                  <Typography variant="body2" sx={{ color: '#262730', fontWeight: 500 }}>
-                    {user?.name}
-                  </Typography>
-                </Box>
-              ) : (
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                  <Button
-                    variant="text"
-                    sx={{ color: '#6C738B', textTransform: 'none', fontWeight: 500 }}
-                    onClick={() => navigate('/login')}
-                  >
-                    Se connecter
-                  </Button>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      bgcolor: '#262730',
-                      color: 'white',
-                      textTransform: 'none',
-                      fontWeight: 500,
-                      px: 3,
-                      '&:hover': { bgcolor: '#1F2937' },
-                    }}
-                    onClick={() => navigate('/login')}
-                  >
-                    S'inscrire
-                  </Button>
-                </Box>
-              )}
-            </Box>
-          </Box>
-        </Container>
-      </Box>
 
       {/* Hero Section avec recette mise en avant */}
       {featuredRecipe && (
@@ -508,99 +426,6 @@ const HomePage: React.FC = () => {
         </Container>
       </Box>
 
-      {/* Footer moderne */}
-      <Box
-        sx={{
-          bgcolor: '#262730',
-          color: 'white',
-          py: 8,
-        }}
-      >
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: 'center', mb: 8 }}>
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: 700,
-                mb: 3,
-              }}
-            >
-              Commençons quelque chose de grand
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                color: 'rgba(255, 255, 255, 0.8)',
-                mb: 4,
-              }}
-            >
-              Rejoignez plus de 2 500+ coureurs qui optimisent déjà leur nutrition avec Runner Recipes.
-            </Typography>
-            
-            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Button
-                variant="outlined"
-                sx={{
-                  borderColor: 'rgba(255, 255, 255, 0.3)',
-                  color: 'white',
-                  fontWeight: 500,
-                  px: 4,
-                  py: 1.5,
-                  borderRadius: '12px',
-                  '&:hover': {
-                    borderColor: 'rgba(255, 255, 255, 0.5)',
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
-                  },
-                }}
-                onClick={() => navigate('/contact')}
-              >
-                Nous contacter
-              </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  bgcolor: 'white',
-                  color: '#262730',
-                  fontWeight: 600,
-                  px: 4,
-                  py: 1.5,
-                  borderRadius: '12px',
-                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
-                }}
-                onClick={() => navigate(isAuthenticated ? '/meal-planner' : '/login')}
-              >
-                Commencer
-              </Button>
-            </Box>
-          </Box>
-
-          {/* Liens du footer */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 4, borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box
-                sx={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: '8px',
-                  background: 'linear-gradient(135deg, #F98807 0%, #F59E0B 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Restaurant sx={{ color: 'white', fontSize: 20 }} />
-              </Box>
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                Runner Recipes
-              </Typography>
-            </Box>
-            
-            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-              © 2025 Runner Recipes. Tous droits réservés.
-            </Typography>
-          </Box>
-        </Container>
-      </Box>
     </Box>
   );
 };
