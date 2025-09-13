@@ -21,9 +21,10 @@ import {
 } from '@mui/material';
 import {
   Search,
-  FilterList,
   Clear,
   Star,
+  ExpandMore,
+  ExpandLess,
 } from '@mui/icons-material';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useRecipes } from '../contexts/RecipeContext';
@@ -60,7 +61,7 @@ const RecipesPage: React.FC = () => {
     rating: undefined,
   });
 
-  // const [showFilters, setShowFilters] = useState(!isMobile); // Plus nécessaire car filtres toujours visibles
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   // Initialiser les filtres depuis l'URL (une seule fois)
   useEffect(() => {
@@ -114,195 +115,228 @@ const RecipesPage: React.FC = () => {
   };
 
   const renderFilters = () => (
-    <Paper sx={{ p: 3, mb: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 1 }}>
-          <FilterList />
-          Filtres
-        </Typography>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={handleClearFilters}
-          startIcon={<Clear />}
-        >
-          Effacer
-        </Button>
-      </Box>
-
-      <Grid container spacing={3}>
-        {/* Recherche */}
-        <Grid size={{ xs: 12 }}>
+    <Box sx={{ mb: 3 }}>
+      {/* Barre de recherche horizontale compacte */}
+      <Paper sx={{ p: 2, mb: 2 }}>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+          {/* Recherche */}
           <TextField
-            fullWidth
-            label="Rechercher une recette"
+            placeholder="Rechercher une recette..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+            sx={{ flexGrow: 1, minWidth: 200 }}
+            size="small"
             InputProps={{
-              endAdornment: (
-                <Button
-                  variant="contained"
-                  onClick={handleSearch}
-                  sx={{ ml: 1 }}
-                >
-                  <Search />
-                </Button>
-              ),
+              startAdornment: <Search sx={{ mr: 1, color: 'text.secondary' }} />,
             }}
           />
-        </Grid>
-
-        {/* Catégories */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <FormControl fullWidth>
-            <InputLabel>Catégories</InputLabel>
-            <Select
-              multiple
-              value={localFilters.categories || []}
-              onChange={(e) => handleFilterChange('categories', e.target.value)}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => {
-                    const category = RECIPE_CATEGORIES.find(cat => cat.id === value);
-                    return (
-                      <Chip
-                        key={value}
-                        label={category?.name || value}
-                        size="small"
-                        sx={{ bgcolor: category?.color, color: 'white' }}
-                      />
-                    );
-                  })}
-                </Box>
-              )}
+          
+          {/* Filtres rapides */}
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            {/* Catégories rapides */}
+            {RECIPE_CATEGORIES.slice(0, 4).map((category) => (
+              <Chip
+                key={category.id}
+                label={category.name}
+                size="small"
+                variant={localFilters.categories?.includes(category.id) ? "filled" : "outlined"}
+                onClick={() => {
+                  const newCategories = localFilters.categories?.includes(category.id)
+                    ? localFilters.categories.filter(id => id !== category.id)
+                    : [...(localFilters.categories || []), category.id];
+                  handleFilterChange('categories', newCategories);
+                }}
+                sx={{
+                  bgcolor: localFilters.categories?.includes(category.id) ? category.color : 'transparent',
+                  color: localFilters.categories?.includes(category.id) ? 'white' : 'inherit',
+                  borderColor: category.color,
+                }}
+              />
+            ))}
+            
+            {/* Bouton filtres avancés */}
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+              endIcon={showAdvancedFilters ? <ExpandLess /> : <ExpandMore />}
             >
-              {RECIPE_CATEGORIES.map((category) => (
-                <MenuItem key={category.id} value={category.id}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <span>{category.icon}</span>
-                    {category.name}
-                  </Box>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        {/* Difficulté */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <FormControl fullWidth>
-            <InputLabel>Difficulté</InputLabel>
-            <Select
-              multiple
-              value={localFilters.difficulty || []}
-              onChange={(e) => handleFilterChange('difficulty', e.target.value)}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => {
-                    const level = DIFFICULTY_LEVELS.find(lev => lev.value === value);
-                    return (
-                      <Chip
-                        key={value}
-                        label={level?.label || value}
-                        size="small"
-                        sx={{ bgcolor: level?.color, color: 'white' }}
-                      />
-                    );
-                  })}
-                </Box>
-              )}
+              Filtres
+            </Button>
+            
+            {/* Bouton effacer */}
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleClearFilters}
+              startIcon={<Clear />}
             >
-              {DIFFICULTY_LEVELS.map((level) => (
-                <MenuItem key={level.value} value={level.value}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Box
-                      sx={{
-                        width: 12,
-                        height: 12,
-                        borderRadius: '50%',
-                        bgcolor: level.color,
-                      }}
-                    />
-                    {level.label}
-                  </Box>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        {/* Temps de préparation */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Typography gutterBottom>Temps de préparation (max)</Typography>
-          <Slider
-            value={localFilters.prepTime || 60}
-            onChange={(_, value) => handleFilterChange('prepTime', value)}
-            min={15}
-            max={180}
-            step={15}
-            marks={[
-              { value: 15, label: '15min' },
-              { value: 60, label: '1h' },
-              { value: 120, label: '2h' },
-              { value: 180, label: '3h' },
-            ]}
-            valueLabelDisplay="auto"
-            valueLabelFormat={(value) => `${value}min`}
-          />
-        </Grid>
-
-        {/* Calories */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Typography gutterBottom>Calories par portion</Typography>
-          <Slider
-            value={[
-              localFilters.calories?.min || 0,
-              localFilters.calories?.max || 1000,
-            ]}
-            onChange={(_, value) => {
-              const [min, max] = value as number[];
-              handleFilterChange('calories', { min, max });
-            }}
-            min={0}
-            max={1000}
-            step={50}
-            marks={[
-              { value: 0, label: '0' },
-              { value: 250, label: '250' },
-              { value: 500, label: '500' },
-              { value: 750, label: '750' },
-              { value: 1000, label: '1000' },
-            ]}
-            valueLabelDisplay="auto"
-            valueLabelFormat={(value) => `${value} cal`}
-          />
-        </Grid>
-
-        {/* Note minimale */}
-        <Grid size={{ xs: 12 }}>
-          <Typography gutterBottom>Note minimale</Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Star color="warning" />
-            <Slider
-              value={localFilters.rating || 0}
-              onChange={(_, value) => handleFilterChange('rating', value)}
-              min={0}
-              max={5}
-              step={0.5}
-              marks={[
-                { value: 0, label: 'Toutes' },
-                { value: 3, label: '3★' },
-                { value: 4, label: '4★' },
-                { value: 5, label: '5★' },
-              ]}
-              valueLabelDisplay="auto"
-              valueLabelFormat={(value) => `${value}★`}
-            />
+              Effacer
+            </Button>
           </Box>
-        </Grid>
-      </Grid>
-    </Paper>
+        </Box>
+      </Paper>
+
+      {/* Filtres avancés collapsibles */}
+      {showAdvancedFilters && (
+        <Paper sx={{ p: 3 }}>
+          <Grid container spacing={3}>
+            {/* Catégories complètes */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Catégories</InputLabel>
+                <Select
+                  multiple
+                  value={localFilters.categories || []}
+                  onChange={(e) => handleFilterChange('categories', e.target.value)}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      {selected.map((value) => {
+                        const category = RECIPE_CATEGORIES.find(cat => cat.id === value);
+                        return (
+                          <Chip
+                            key={value}
+                            label={category?.name || value}
+                            size="small"
+                            sx={{ bgcolor: category?.color, color: 'white' }}
+                          />
+                        );
+                      })}
+                    </Box>
+                  )}
+                >
+                  {RECIPE_CATEGORIES.map((category) => (
+                    <MenuItem key={category.id} value={category.id}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <span>{category.icon}</span>
+                        {category.name}
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* Difficulté */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Difficulté</InputLabel>
+                <Select
+                  multiple
+                  value={localFilters.difficulty || []}
+                  onChange={(e) => handleFilterChange('difficulty', e.target.value)}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      {selected.map((value) => {
+                        const level = DIFFICULTY_LEVELS.find(lev => lev.value === value);
+                        return (
+                          <Chip
+                            key={value}
+                            label={level?.label || value}
+                            size="small"
+                            sx={{ bgcolor: level?.color, color: 'white' }}
+                          />
+                        );
+                      })}
+                    </Box>
+                  )}
+                >
+                  {DIFFICULTY_LEVELS.map((level) => (
+                    <MenuItem key={level.value} value={level.value}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box
+                          sx={{
+                            width: 12,
+                            height: 12,
+                            borderRadius: '50%',
+                            bgcolor: level.color,
+                          }}
+                        />
+                        {level.label}
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* Temps de préparation */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Typography variant="body2" gutterBottom>Temps de préparation (max)</Typography>
+              <Slider
+                value={localFilters.prepTime || 60}
+                onChange={(_, value) => handleFilterChange('prepTime', value)}
+                min={15}
+                max={180}
+                step={15}
+                marks={[
+                  { value: 15, label: '15min' },
+                  { value: 60, label: '1h' },
+                  { value: 120, label: '2h' },
+                  { value: 180, label: '3h' },
+                ]}
+                valueLabelDisplay="auto"
+                valueLabelFormat={(value) => `${value}min`}
+                size="small"
+              />
+            </Grid>
+
+            {/* Calories */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Typography variant="body2" gutterBottom>Calories par portion</Typography>
+              <Slider
+                value={[
+                  localFilters.calories?.min || 0,
+                  localFilters.calories?.max || 1000,
+                ]}
+                onChange={(_, value) => {
+                  const [min, max] = value as number[];
+                  handleFilterChange('calories', { min, max });
+                }}
+                min={0}
+                max={1000}
+                step={50}
+                marks={[
+                  { value: 0, label: '0' },
+                  { value: 250, label: '250' },
+                  { value: 500, label: '500' },
+                  { value: 750, label: '750' },
+                  { value: 1000, label: '1000' },
+                ]}
+                valueLabelDisplay="auto"
+                valueLabelFormat={(value) => `${value} cal`}
+                size="small"
+              />
+            </Grid>
+
+            {/* Note minimale */}
+            <Grid size={{ xs: 12 }}>
+              <Typography variant="body2" gutterBottom>Note minimale</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Star color="warning" />
+                <Slider
+                  value={localFilters.rating || 0}
+                  onChange={(_, value) => handleFilterChange('rating', value)}
+                  min={0}
+                  max={5}
+                  step={0.5}
+                  marks={[
+                    { value: 0, label: 'Toutes' },
+                    { value: 3, label: '3★' },
+                    { value: 4, label: '4★' },
+                    { value: 5, label: '5★' },
+                  ]}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={(value) => `${value}★`}
+                  size="small"
+                />
+              </Box>
+            </Grid>
+          </Grid>
+        </Paper>
+      )}
+    </Box>
   );
 
   return (
