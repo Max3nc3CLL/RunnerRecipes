@@ -120,12 +120,12 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
               position: 'absolute',
               top: 12,
               left: 12,
-              background: 'linear-gradient(135deg, #F98807 0%, #FFB231 100%)',
+              background: category.color,
               color: 'white',
               fontWeight: 600,
               fontSize: '0.75rem',
               borderRadius: '50px',
-              boxShadow: '0 2px 12px rgba(249, 136, 7, 0.25)',
+              boxShadow: `0 2px 12px ${category.color}40`,
               backdropFilter: 'blur(10px)',
             }}
           />

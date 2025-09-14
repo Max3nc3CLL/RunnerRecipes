@@ -22,7 +22,6 @@ import {
 import {
   Search,
   Clear,
-  Star,
   ExpandMore,
   ExpandLess,
 } from '@mui/icons-material';
@@ -58,7 +57,6 @@ const RecipesPage: React.FC = () => {
     difficulty: [],
     prepTime: undefined,
     calories: undefined,
-    rating: undefined,
   });
 
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
@@ -310,29 +308,6 @@ const RecipesPage: React.FC = () => {
               />
             </Grid>
 
-            {/* Note minimale */}
-            <Grid size={{ xs: 12 }}>
-              <Typography variant="body2" gutterBottom>Note minimale</Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Star color="warning" />
-                <Slider
-                  value={localFilters.rating || 0}
-                  onChange={(_, value) => handleFilterChange('rating', value)}
-                  min={0}
-                  max={5}
-                  step={0.5}
-                  marks={[
-                    { value: 0, label: 'Toutes' },
-                    { value: 3, label: '3★' },
-                    { value: 4, label: '4★' },
-                    { value: 5, label: '5★' },
-                  ]}
-                  valueLabelDisplay="auto"
-                  valueLabelFormat={(value) => `${value}★`}
-                  size="small"
-                />
-              </Box>
-            </Grid>
           </Grid>
         </Paper>
       )}

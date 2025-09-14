@@ -1,5 +1,5 @@
 import { supabase } from '../config/supabase';
-import { Recipe } from '../types';
+import { Recipe, SearchFilters } from '../types';
 
 class SupabaseRecipesService {
   // Récupérer toutes les recettes
@@ -26,6 +26,73 @@ class SupabaseRecipesService {
     } catch (error) {
       console.error('Erreur lors de la récupération des recettes:', error);
       return [];
+    }
+  }
+
+  // Récupérer les recettes avec filtres
+  async getRecipesWithFilters(filters?: SearchFilters, page: number = 1, limit: number = 12): Promise<{ recipes: Recipe[], total: number }> {
+    try {
+      let query = supabase
+        .from('recipes')
+        .select(`
+          *,
+          profiles!recipes_author_id_fkey (
+            id,
+            full_name,
+            avatar_url
+          )
+        `, { count: 'exact' });
+
+      // Appliquer les filtres
+      if (filters) {
+        // Filtre par catégories
+        if (filters.categories && filters.categories.length > 0) {
+          query = query.in('category_id', filters.categories);
+        }
+
+        // Filtre par difficulté
+        if (filters.difficulty && filters.difficulty.length > 0) {
+          query = query.in('difficulty', filters.difficulty);
+        }
+
+        // Filtre par temps de préparation
+        if (filters.prepTime) {
+          query = query.lte('prep_time', filters.prepTime);
+        }
+
+        // Filtre par temps de cuisson
+        if (filters.cookTime) {
+          query = query.lte('cook_time', filters.cookTime);
+        }
+
+        // Filtre par calories
+        if (filters.calories) {
+          query = query.gte('nutrition->caloriesPerServing', filters.calories.min);
+          query = query.lte('nutrition->caloriesPerServing', filters.calories.max);
+        }
+      }
+
+      // Pagination
+      const startIndex = (page - 1) * limit;
+      query = query.range(startIndex, startIndex + limit - 1);
+
+      // Tri
+      query = query.order('created_at', { ascending: false });
+
+      const { data, error, count } = await query;
+
+      if (error) {
+        console.error('Erreur lors de la récupération des recettes filtrées:', error);
+        return { recipes: [], total: 0 };
+      }
+
+      return {
+        recipes: data?.map(this.mapRecipeFromSupabase) || [],
+        total: count || 0
+      };
+    } catch (error) {
+      console.error('Erreur lors de la récupération des recettes filtrées:', error);
+      return { recipes: [], total: 0 };
     }
   }
 

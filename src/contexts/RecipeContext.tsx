@@ -49,28 +49,11 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      let allRecipes = await supabaseRecipesService.getAllRecipes();
+      const { recipes, total } = await supabaseRecipesService.getRecipesWithFilters(filters, page, ITEMS_PER_PAGE);
 
-      // Appliquer les filtres
-      if (filters) {
-        allRecipes = allRecipes.filter(recipe => {
-          if (filters.categories && filters.categories.length > 0 && !filters.categories.includes(recipe.category.id)) return false;
-          if (filters.difficulty && filters.difficulty.length > 0 && !filters.difficulty.includes(recipe.difficulty)) return false;
-          if (filters.prepTime && recipe.prepTime > filters.prepTime) return false;
-          if (filters.cookTime && recipe.cookTime > filters.cookTime) return false;
-          if (filters.rating && recipe.rating < filters.rating) return false;
-          return true;
-        });
-      }
-
-      // Pagination
-      const startIndex = (page - 1) * ITEMS_PER_PAGE;
-      const endIndex = startIndex + ITEMS_PER_PAGE;
-      const paginatedRecipes = allRecipes.slice(startIndex, endIndex);
-
-      setRecipes(paginatedRecipes);
-      setTotalRecipes(allRecipes.length);
-      setTotalPages(Math.ceil(allRecipes.length / ITEMS_PER_PAGE));
+      setRecipes(recipes);
+      setTotalRecipes(total);
+      setTotalPages(Math.ceil(total / ITEMS_PER_PAGE));
       setCurrentPage(page);
     } catch (err) {
       setError('Erreur lors du chargement des recettes');
